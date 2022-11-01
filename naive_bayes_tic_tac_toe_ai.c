@@ -30,8 +30,17 @@ int initialize()
 	return 0;
 }
 
+/**
+ * @brief
+ * Calculates the next best move on the inputted board using the naive bayes model weights
+ * @param board 
+ * Board array Eg.{'x','b','o','b','b','b','b','b','b'}
+ * @return int 
+ * Index of the best possible move
+ */
 int get_best_move(int board[9])
 {
+	// Load weights if weight struct uninitialized
 	if (weights.p_win == 0)
 	{
 		initialize();
@@ -42,6 +51,7 @@ int get_best_move(int board[9])
 	float prev_win_prob = 0;
 	float lose_prob = 0;
 
+	// Try every blank space and calculate the best possible move
 	for (int i = 0; i < 9; i++)
 	{
 		if (board[i] != 'b')
@@ -69,6 +79,16 @@ int get_best_move(int board[9])
 	return best_move;
 }
 
+/**
+ * @brief 
+ * Calculates the input board's probability of winning using the inputted weights
+ * @param board 
+ * eg. {'x','o','b','b','b','b','b','b','b'}
+ * @param weights 
+ * struct containing the weights of the naive bayes model
+ * @return float 
+ * Probability of winning
+ */
 float calculate_win_prob(int board[9], struct weights weights)
 {
 	float win_prob = 1;
@@ -99,6 +119,16 @@ float calculate_win_prob(int board[9], struct weights weights)
 	return win_prob;
 }
 
+/**
+ * @brief 
+ * Calculates the input board's probability of losing using the inputted weights
+ * @param board 
+ * eg. {'x','o','b','b','b','b','b','b','b'}
+ * @param weights 
+ * struct containing the weights of the naive bayes model
+ * @return float 
+ * Probability of losing
+ */
 float calculate_lose_prob(int board[9], struct weights weights)
 {
 	float lose_prob = 1;

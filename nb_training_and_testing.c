@@ -36,6 +36,12 @@ int main(void)
 	return 0;
 }
 
+/**
+ * @brief 
+ * Reads the tic-tac-toe.data file and splits the data into training and testing sets
+ * @return struct prepped_data
+ * Struct containing the game data and the arrays containing the training and testing indexes
+ */
 struct prepped_data prepare_data()
 {
 	FILE *ptr;
@@ -105,8 +111,6 @@ struct prepped_data prepare_data()
 	// indexes of the rows to be used as training and testing data respectively
 	// training_data_indexes: contains the indexes of 0.8 of the winning rows and 0.8 of losing rows
 	// testing_data_indexes: contains the indexes of 0.2 of the winning rows and 0.2 of losing rows
-	// int training_data_index[766] = {};
-	// int testing_data_index[192] = {};
 
 	int array_length = sizeof(prepped_data.game_data) / sizeof(prepped_data.game_data[0]);
 
@@ -131,6 +135,14 @@ struct prepped_data prepare_data()
 	return prepped_data;
 }
 
+/**
+ * @brief 
+ * Trains and returns a model using the naive bayes algorithm
+ * @param prepped_data 
+ * Struct containing the game data and the arrays containing the training and testing indexes
+ * @return struct weights 
+ * Struct containing the weights of the naive bayes classifier
+ */
 struct weights train_model(struct prepped_data prepped_data)
 {
 	float x_win_total_pos[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -146,6 +158,7 @@ struct weights train_model(struct prepped_data prepped_data)
 
 	int array_length = sizeof(prepped_data.training_indexes) / sizeof(prepped_data.training_indexes[0]);
 
+	// Count the total Xs, Os, and blanks in each position and the total number of wins and loses
 	for (int row = 0; row < array_length; row++)
 	{
 
@@ -198,6 +211,7 @@ struct weights train_model(struct prepped_data prepped_data)
 
 	struct weights weights;
 
+	// Calculate the weights at the differenent positions and store in weights struct
 	for (int i = 0; i < 9; i++)
 	{
 		weights.p_x_win_pos[i] = x_win_total_pos[i] / win_total;
@@ -209,9 +223,11 @@ struct weights train_model(struct prepped_data prepped_data)
 		weights.p_o_lose_pos[i] = o_lose_total_pos[i] / lose_total;
 	}
 
+	// Calculate total wins and loses and store in weight struct 
 	weights.p_win = win_total / (win_total + lose_total);
 	weights.p_lose = lose_total / (win_total + lose_total);
 
+	// Store the weights struct in a file
 	FILE *weight_fptr = 0;
 
 	weight_fptr = fopen("naive_bayes_weights.data", "wb");
@@ -222,6 +238,14 @@ struct weights train_model(struct prepped_data prepped_data)
 	return weights;
 }
 
+/**
+ * @brief 
+ * Test the accuracy of the model with the test data and print the stats
+ * @param weights 
+ * struct containing the weights of the naive bayes model
+ * @param prepped_data 
+ * Struct containing the game data and the arrays containing the training and testing indexes
+ */
 void test_model(struct weights weights, struct prepped_data prepped_data)
 {
 	float prob_of_error = 0;
@@ -232,6 +256,7 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 
 	int array_length = sizeof(prepped_data.testing_indexes) / sizeof(prepped_data.testing_indexes[0]);
 
+	// Calculate the probabilty of error and confusion matrix values of the model
 	for (int row = 0; row < array_length; row++)
 	{
 		int test_index = prepped_data.testing_indexes[row];
@@ -283,6 +308,16 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 		   prob_of_error, true_positive, true_negative, false_positive, false_negative);
 }
 
+/**
+ * @brief 
+ * Calculates the input board's probability of winning using the inputted weights
+ * @param board 
+ * eg. {'x','o','b','b','b','b','b','b','b'}
+ * @param weights 
+ * struct containing the weights of the naive bayes model
+ * @return float 
+ * Probability of winning
+ */
 float calculate_win_prob(int board[9], struct weights weights)
 {
 	float win_prob = 1;
@@ -313,6 +348,16 @@ float calculate_win_prob(int board[9], struct weights weights)
 	return win_prob;
 }
 
+/**
+ * @brief 
+ * Calculates the input board's probability of losing using the inputted weights
+ * @param board 
+ * eg. {'x','o','b','b','b','b','b','b','b'}
+ * @param weights 
+ * struct containing the weights of the naive bayes model
+ * @return float 
+ * Probability of losing
+ */
 float calculate_lose_prob(int board[9], struct weights weights)
 {
 	float lose_prob = 1;
