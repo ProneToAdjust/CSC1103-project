@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "minimax.h"
+
 const char PLAYER1 = 'X';
 const char PLAYER2 = 'O';
 const char COMPUTER = 'O';
+int arrBestMove[2];
 int currentTurn = 0;
 int currentPlayer = 0;
 char board[3][3] = {
@@ -26,8 +29,9 @@ void choosePlayer();
 int turnTracker(char player);
 void playerTracker(int player); // track current turn is whose, can think of merging with turnTracker()
 
-int miniMax(int depth, int isMaximizing);
-void bestMove();
+//int miniMax(int depth, int isMaximizing);
+//void bestMove();
+
 
 int main()
 {
@@ -48,7 +52,11 @@ int main()
         printBoard();
         playerTracker(currentPlayer);
         // playerMove(currentPlayer);
-        bestMove();
+
+        int *arrBestMove;
+        arrBestMove = bestMoveByAI(board, 2);
+        board[arrBestMove[0]][arrBestMove[1]] = 'O';
+
         winner = checkWin(board);
         if (winner != ' ' || isBoardFull() == 0)
         {
@@ -257,6 +265,7 @@ void playerTracker(int player)
     }
 }
 
+/*
 void bestMove()
 {
     int bestScore = -99;
@@ -284,6 +293,8 @@ void bestMove()
     }
     board[bestMoveRow][bestMoveCol] = COMPUTER;
 }
+
+
 
 int miniMax(int depth, int isMaximizing)
 {
@@ -354,3 +365,4 @@ int miniMax(int depth, int isMaximizing)
         return bestScore;
     }
 }
+*/
