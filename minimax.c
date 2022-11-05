@@ -55,12 +55,14 @@ int miniMax(int depth, int isMaximizing, int alpha, int beta)
     {
         if (result == 'X')
         {
-            score = -1;
+            score = -10;
+            score = score - depth;
             return score;
         }
         if (result == 'O')
         {
-            score = 1;
+            score = 10;            // score is 10 since not more than 9 moves (depth) can be made.
+            score = score - depth; // ensures that AI always picks the move that has lesser depth(lesser moves)
             return score;
         }
         if (result == 'T')
@@ -87,8 +89,8 @@ int miniMax(int depth, int isMaximizing, int alpha, int beta)
                     {
                         bestScore = score;
                     }
-                    
-                    //alpha-beta pruning
+
+                    // alpha-beta pruning
                     if (alpha > bestScore)
                     {
                         alpha = alpha;
@@ -123,7 +125,7 @@ int miniMax(int depth, int isMaximizing, int alpha, int beta)
                         bestScore = score;
                     }
 
-                    //alpha-beta pruning
+                    // alpha-beta pruning
                     if (beta < bestScore)
                     {
                         beta = beta;
