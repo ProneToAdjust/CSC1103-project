@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include "minimax.h"
-#include "naive_bayes_tic_tac_toe_ai.c"
+#include "naive_bayes_ai.c"
 
 // Array for board
 char board[3][3];
@@ -215,7 +215,7 @@ void level3(){
     int converted_board[9];
 
 
-    // Convert current game board to be used in the naive_bayes_tic_tac_toe_ai local library
+    // Convert current game board to be used in the naive_bayes_ai local library
     int index = 0;
     for (int row = 0; row < 3; row++)
     {
