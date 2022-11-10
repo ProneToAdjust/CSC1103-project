@@ -1,4 +1,4 @@
-/* gcc -o tictactoe_main tictactoe_main.c minimax.c
+/* gcc -o tictactoe_main tictactoe_main.c minimax.c naive_bayes_ai.c
  *  .\tictactoe_main
  */
 
