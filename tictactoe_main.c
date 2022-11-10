@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include "minimax.h"
+#include "naive_bayes_tic_tac_toe_ai.c"
 
 // Array for board
 char board[3][3];
@@ -33,6 +34,7 @@ void manualPlayer();
 void level1();
 void level2();
 void level3();
+void level4();
 int playerChoice;
 int difficulty;
 
@@ -50,10 +52,10 @@ void Instructions()
         {
             do
             {
-                printf("\nInput 1 for level 1\nInput 2 for level 2\nInput 3 for level 3\nPlease key your input:");
+                printf("\nInput 1 for level 1\nInput 2 for level 2\nInput 3 for level 3\nInput 4 for level 4\nPlease key your input:");
                 scanf("%d", &difficulty);
 
-                if (difficulty == 1 || difficulty == 2 || difficulty == 3)
+                if (difficulty == 1 || difficulty == 2 || difficulty == 3 || difficulty == 4)
                 {
                     printf("Choose any empty cells and start playing\n");
                     instructiontrue = false;
@@ -129,9 +131,14 @@ void Player2Turn()
             level2();
         }
 
-        else
+        else if (difficulty == 3)
         {
             level3();
+        }
+
+        else
+        {
+            level4();
         }
     }
 
@@ -203,7 +210,34 @@ void level2()
     }
 }
 
-void level3()
+// Naive Bayes AI opponent, intermediate
+void level3(){
+    int converted_board[9];
+
+
+    // Convert current game board to be used in the naive_bayes_tic_tac_toe_ai local library
+    int index = 0;
+    for (int row = 0; row < 3; row++)
+    {
+        for (int col = 0; col < 3; col++)
+        {   
+            converted_board[index] = board[row][col] == ' ' ? 'b' : tolower(board[row][col]);
+            index++;
+        }
+    }
+
+    // Get position of best possible move from NB ai
+    int best_move = get_best_move(converted_board);
+
+    // Convert to position data usable by game board
+    int row = best_move/3;
+    int col = row > 0 ? best_move % 3 : best_move;
+
+    // Make move
+    board[row][col] = PlayerTWO;
+}
+
+void level4()
 {
     printf("hard\n");
     int *arrBestMove;
