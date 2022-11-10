@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include "minimax.h"
-#include "naive_bayes_ai.c"
+#include "naive_bayes_ai.h"
 
 // Array for board
 char board[3][3];
