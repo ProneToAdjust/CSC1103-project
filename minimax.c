@@ -25,12 +25,6 @@ int *bestMoveByAI(char board[3][3], int playerNumber, int togglePrune)
         computer = 'O';
         human = 'X';
     }
-    else
-    {
-        // not valid player number
-        printf("Invalid player number");
-        return 0;
-    }
 
     for (int i = 0; i < 3; i++)
     {

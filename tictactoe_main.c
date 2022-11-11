@@ -93,6 +93,7 @@ void BoardDisplay()
     printf("\n");
 }
 
+// ask player 1 for input for x,y and input in the grid if the move is not taken
 void Player1Turn()
 {
     int row, column;
@@ -117,6 +118,7 @@ void Player1Turn()
     } while (ValidMove == false);
 }
 
+// it will execute the chosen gameplay chosen in instruction function
 void Player2Turn()
 {
     if (playerChoice == 1)
@@ -148,6 +150,7 @@ void Player2Turn()
     }
 }
 
+// ask player 2 for input for x,y and input in the grid if the move is not taken
 void manualPlayer()
 {
     int row, column;
@@ -172,6 +175,7 @@ void manualPlayer()
     } while (ValidMove == false);
 }
 
+// x and y is generated through random generator
 void level1()
 {
     printf("easy\n");
@@ -196,22 +200,8 @@ void level1()
     } while (ValidMove == false);
 }
 
-void level2()
-{
-    printf("medium\n");
-    int option = zeroOrOne(true);
-    if (option == 0)
-    {
-        level1();
-    }
-    else
-    {
-        level3();
-    }
-}
-
 // Naive Bayes AI opponent, intermediate
-void level3(){
+void level2(){
     int converted_board[9];
 
 
@@ -237,6 +227,22 @@ void level3(){
     board[row][col] = PlayerTWO;
 }
 
+// random generator is used to determine if level 1 or level 4 is executed
+void level3()
+{
+    printf("medium\n");
+    int option = zeroOrOne(true);
+    if (option == 0)
+    {
+        level1();
+    }
+    else
+    {
+        level4();
+    }
+}
+
+// minimax algorithm is used for this level
 void level4()
 {
     printf("hard\n");
@@ -403,6 +409,7 @@ int main()
     return 0;
 }
 
+// generate a random number (1-3) for level 1
 int randomNumGen(bool randomSeed)
 {
     int randomNum;
@@ -417,6 +424,7 @@ int randomNumGen(bool randomSeed)
     return randomNum;
 }
 
+// generate a random 0 or 1 for level 3
 int zeroOrOne(bool randomSeed)
 {
     int randomNo;
