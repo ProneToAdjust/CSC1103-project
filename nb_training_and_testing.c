@@ -272,16 +272,6 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 
 		int w_or_l = win_prob > lose_prob ? 1 : 0;
 
-		if (
-			(w_or_l && prepped_data.game_data[test_index][9] == 'p') ||
-			(!w_or_l && prepped_data.game_data[test_index][9] == 'n'))
-		{
-		}
-		else
-		{
-			prob_of_error += 1 / 766.0;
-		}
-
 		switch (prepped_data.game_data[test_index][9])
 		{
 		case 'p':
@@ -293,10 +283,10 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 			break;
 
 		case 'n':
-			if (w_or_l)
-				false_positive++;
-			else
+			if (!w_or_l)
 				true_negative++;
+			else
+				false_positive++;
 
 			break;
 
@@ -304,6 +294,9 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 			break;
 		}
 	}
+
+	prob_of_error = (false_positive + false_negative)/192.0;
+
 	printf("Probability of error: %f\nTrue positive: %d\nTrue negative: %d\nFalse positive: %d\nFalse negative: %d\n\n",
 		   prob_of_error, true_positive, true_negative, false_positive, false_negative);
 	
