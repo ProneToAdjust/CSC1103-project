@@ -303,7 +303,7 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 	printf("                          Actual\n");
 	printf("                    positive  negative\n");
 	printf("                    ------------------\n");
-	printf("          positive |    %d  |   %d   |\n",true_positive, false_negative);
+	printf("          positive |    %d  |   %d   |\n",true_positive, false_positive);
 	printf("Predicted          |---------|--------|\n");
 	printf("          negative |    %d   |   %d   |\n", false_negative, true_negative);
 	printf("                    ------------------\n");
