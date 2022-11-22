@@ -114,13 +114,19 @@ struct prepped_data prepare_data()
 
 	for (int i = 0; i < array_length; i++)
 	{
-		if (i < 766)
+		if (i < 626)
 		{
-			prepped_data.training_indexes[i] = i;
+			if (i < 500)
+				prepped_data.training_indexes[i] = i;
+			else
+				prepped_data.testing_indexes[i - 500] = i;
 		}
 		else
 		{
-			prepped_data.testing_indexes[i-766] = i;
+			if (i < 891)
+				prepped_data.training_indexes[500 + i - 625] = i;
+			else
+				prepped_data.testing_indexes[125 + i - 890] = i;
 		}
 	}
 
@@ -246,12 +252,12 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 	int false_positive = 0;
 	int false_negative = 0;
 
-	int array_length = sizeof(prepped_data.training_indexes) / sizeof(prepped_data.training_indexes[0]);
+	int array_length = sizeof(prepped_data.testing_indexes) / sizeof(prepped_data.testing_indexes[0]);
 
 	// Calculate the probabilty of error and confusion matrix values of the model
 	for (int row = 0; row < array_length; row++)
 	{
-		int test_index = prepped_data.training_indexes[row];
+		int test_index = prepped_data.testing_indexes[row];
 		int board[9] = {};
 
 		for (int col = 0; col < 9; col++)
@@ -287,7 +293,7 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 		}
 	}
 
-	prob_of_error = (false_positive + false_negative)/766.0;
+	prob_of_error = (false_positive + false_negative)/192.0;
 
 	printf("Probability of error: %f\nTrue positive: %d\nTrue negative: %d\nFalse positive: %d\nFalse negative: %d\n\n",
 		   prob_of_error, true_positive, true_negative, false_positive, false_negative);
