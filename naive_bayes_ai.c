@@ -1,7 +1,14 @@
+/**
+ * @file naive_bayes_ai.c
+ * @author Ryan Ong QC
+ * @brief This file is used in tictactoe_main.c as the logic for the Machine learning AI opponent
+ * 
+ * 
+ */
 #include <stdio.h>
 #include "naive_bayes_ai.h"
 
-static struct weights weights;
+static struct weights weights; // found in naive_bayes_ai.h
 
 int initialize();
 int get_best_move();

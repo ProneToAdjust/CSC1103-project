@@ -1,3 +1,16 @@
+/**
+ * @file nb_training_and_testing.c
+ * @author Ryan Ong QC
+ * @brief Run this file to calculate the probabilities for the naive bayes classifier
+ * and store them in a file, afterwards test the classifier and print the error prob and confusion matrix
+ * 
+ * Build:
+ * gcc -o nb_training_and_testing nb_training_and_testing.c naive_bayes_ai.c
+ * 
+ * Run:
+ * .\nb_training_and_testing
+ */
+
 #include <stdio.h>
 #include "naive_bayes_ai.h"
 
@@ -188,7 +201,7 @@ struct weights train_model(struct prepped_data prepped_data)
 		}
 	}
 
-	struct weights weights;
+	struct weights weights; // found in naive_bayes_ai.h
 
 	// Calculate the weights at the differenent positions and store in weights struct
 	for (int i = 0; i < 9; i++)
