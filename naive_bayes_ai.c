@@ -1,18 +1,5 @@
 #include <stdio.h>
-
-struct weights
-{
-	float p_x_win_pos[9];
-	float p_b_win_pos[9];
-	float p_o_win_pos[9];
-
-	float p_x_lose_pos[9];
-	float p_b_lose_pos[9];
-	float p_o_lose_pos[9];
-
-	float p_win;
-	float p_lose;
-};
+#include "naive_bayes_ai.h"
 
 static struct weights weights;
 

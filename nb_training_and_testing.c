@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "naive_bayes_ai.h"
 
 struct prepped_data
 {
@@ -7,25 +8,9 @@ struct prepped_data
 	int testing_indexes[192];
 };
 
-struct weights
-{
-	float p_x_win_pos[9];
-	float p_b_win_pos[9];
-	float p_o_win_pos[9];
-
-	float p_x_lose_pos[9];
-	float p_b_lose_pos[9];
-	float p_o_lose_pos[9];
-
-	float p_win;
-	float p_lose;
-};
-
 struct prepped_data prepare_data();
 struct weights train_model(struct prepped_data);
 void test_model(struct weights, struct prepped_data);
-float calculate_win_prob(int board[9], struct weights weights);
-float calculate_lose_prob(int board[9], struct weights weights);
 
 int main(void)
 {
@@ -116,19 +101,13 @@ struct prepped_data prepare_data()
 
 	for (int i = 0; i < array_length; i++)
 	{
-		if (i < 626)
+		if (i < 766)
 		{
-			if (i < 500)
-				prepped_data.training_indexes[i] = i;
-			else
-				prepped_data.testing_indexes[i - 500] = i;
+			prepped_data.training_indexes[i] = i;
 		}
 		else
 		{
-			if (i < 891)
-				prepped_data.training_indexes[500 + i - 625] = i;
-			else
-				prepped_data.testing_indexes[125 + i - 890] = i;
+			prepped_data.testing_indexes[i-766] = i;
 		}
 	}
 
@@ -254,12 +233,12 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 	int false_positive = 0;
 	int false_negative = 0;
 
-	int array_length = sizeof(prepped_data.testing_indexes) / sizeof(prepped_data.testing_indexes[0]);
+	int array_length = sizeof(prepped_data.training_indexes) / sizeof(prepped_data.training_indexes[0]);
 
 	// Calculate the probabilty of error and confusion matrix values of the model
 	for (int row = 0; row < array_length; row++)
 	{
-		int test_index = prepped_data.testing_indexes[row];
+		int test_index = prepped_data.training_indexes[row];
 		int board[9] = {};
 
 		for (int col = 0; col < 9; col++)
@@ -295,7 +274,7 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 		}
 	}
 
-	prob_of_error = (false_positive + false_negative)/192.0;
+	prob_of_error = (false_positive + false_negative)/766.0;
 
 	printf("Probability of error: %f\nTrue positive: %d\nTrue negative: %d\nFalse positive: %d\nFalse negative: %d\n\n",
 		   prob_of_error, true_positive, true_negative, false_positive, false_negative);
@@ -307,83 +286,4 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 	printf("Predicted          |---------|--------|\n");
 	printf("          negative |    %d   |   %d   |\n", false_negative, true_negative);
 	printf("                    ------------------\n");
-}
-
-/**
- * @brief 
- * Calculates the input board's probability of winning using the inputted weights
- * @param board 
- * eg. {'x','o','b','b','b','b','b','b','b'}
- * @param weights 
- * struct containing the weights of the naive bayes model
- * @return float 
- * Probability of winning
- */
-float calculate_win_prob(int board[9], struct weights weights)
-{
-	float win_prob = 1;
-
-	for (int i = 0; i < 9; i++)
-	{
-		switch (board[i])
-		{
-		case 'x':
-			win_prob *= weights.p_x_win_pos[i];
-			break;
-
-		case 'b':
-			win_prob *= weights.p_b_win_pos[i];
-			break;
-
-		case 'o':
-			win_prob *= weights.p_o_win_pos[i];
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	win_prob *= weights.p_win;
-
-	return win_prob;
-}
-
-/**
- * @brief 
- * Calculates the input board's probability of losing using the inputted weights
- * @param board 
- * eg. {'x','o','b','b','b','b','b','b','b'}
- * @param weights 
- * struct containing the weights of the naive bayes model
- * @return float 
- * Probability of losing
- */
-float calculate_lose_prob(int board[9], struct weights weights)
-{
-	float lose_prob = 1;
-
-	for (int i = 0; i < 9; i++)
-	{
-		switch (board[i])
-		{
-		case 'x':
-			lose_prob *= weights.p_x_lose_pos[i];
-			break;
-
-		case 'b':
-			lose_prob *= weights.p_b_lose_pos[i];
-			break;
-
-		case 'o':
-			lose_prob *= weights.p_o_lose_pos[i];
-			break;
-
-		default:
-			break;
-		}
-	}
-	lose_prob *= weights.p_lose;
-
-	return lose_prob;
 }
