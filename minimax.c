@@ -1,30 +1,27 @@
 #include <stdio.h>
 #include <limits.h>
+#include <sys/time.h>
+
 #include "minimax.h"
 
 static char computer = 'N';
 static char human = 'N';
-int moveCount;
+int moveCount; // variable to count number of loops
 
-int *bestMoveByAI(char board[3][3], int playerNumber, int togglePrune)
+struct timespec start, end;
+
+int *bestMoveByAI(char board[3][3], int togglePrune)
 {
-    moveCount = 0;
+    clock_gettime(CLOCK_MONOTONIC, &start); // start clock function to record time taken to run algorithm
+    moveCount = 0;                          // reset counter to 0 before starting
     static int arrBestMove[2];
     int score = -1;
     int bestScore = INT_MIN;
     int bestMoveRow = -1;
     int bestMoveCol = -1;
 
-    if (playerNumber == 1) // if computer is player 1 (goes first), computer is X and human is O
-    {
-        computer = 'X';
-        human = 'O';
-    }
-    else if (playerNumber == 2) // vice versa (computer goes second)
-    {
-        computer = 'O';
-        human = 'X';
-    }
+    computer = 'O';
+    human = 'X';
 
     for (int i = 0; i < 3; i++)
     {
@@ -32,54 +29,58 @@ int *bestMoveByAI(char board[3][3], int playerNumber, int togglePrune)
         {
             if (board[i][k] == ' ') // check if spot is empty
             {
-                board[i][k] = computer;                
-                score = (togglePrune == 1) ? miniMax(0, 0, INT_MIN, INT_MAX, 1) : miniMax(0, 0, INT_MIN, INT_MAX, 0);
+                board[i][k] = computer; // simulate the move
+                score = (togglePrune == 1) ? miniMax(0, 0, INT_MIN, INT_MAX, 1) : miniMax(0, 0, INT_MIN, INT_MAX, 0);   //calls minimax function
                 board[i][k] = ' '; // undo the move
                 if (score > bestScore)
                 {
                     bestScore = score;
-                    bestMoveRow = i;
-                    bestMoveCol = k;
+                    bestMoveRow = i;        //sets current loop's position as the x axis for best move
+                    bestMoveCol = k;        //sets current loop's position as the y axis for best move
                 }
             }
         }
     }
-    arrBestMove[0] = bestMoveRow;
+    arrBestMove[0] = bestMoveRow;       //sets best move into array
     arrBestMove[1] = bestMoveCol;
-    printf("Total moves made by Computer: %d\n", moveCount / 2);
+    printf("Total moves made by Computer: %d\n", moveCount / 2);        //calculation of number of moves simulated by minimax
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    double time_taken;
+    time_taken = (end.tv_sec - start.tv_sec) * 1e9;
+    time_taken = (time_taken + (end.tv_nsec - start.tv_nsec)) * 1e-9;       //calculation of time taken
+    printf("Time taken to run the algorithm is: %lf", time_taken);
     return arrBestMove;
 }
 
 int miniMax(int depth, int isMaximizing, int alpha, int beta, int togglePrune)
 {
     moveCount += 1;
-    char result = checkWin(board);
-
+    char result = checkWin(board);      //check if game has ended. if no, continue recursive
     int score;
-    if (result != ' ')
+    if (result != ' ')      //if game has ended, stop the recursive function, return the score
     {
-        if (result == 'X')
+        if (result == 'X')      //player(human) is X, minimizer
         {
             score = -10;
             score = score - depth;
 
             return score;
         }
-        if (result == 'O')
+        if (result == 'O')      //AI(computer) is O, maximizer
         {
             score = 10;            // score is 10 since not more than 9 moves (depth) can be made.
             score = score - depth; // ensures that AI always picks the move that has lesser depth(lesser moves)
 
             return score;
         }
-        if (result == 'T')
+        if (result == 'T')      //If game is a tie
         {
             score = 0;
             return score;
         }
     }
 
-    if (isMaximizing == 1)
+    if (isMaximizing == 1)      //AI(computer) is the maximizer
     {
         int bestScore = INT_MIN;
         for (int i = 0; i < 3; i++)
@@ -89,8 +90,7 @@ int miniMax(int depth, int isMaximizing, int alpha, int beta, int togglePrune)
                 if (board[i][k] == ' ')
                 {
                     board[i][k] = computer; //'O' turn
-                    // printBoard();
-                    score = miniMax(depth + 1, 0, alpha, beta, togglePrune);
+                    score = miniMax(depth + 1, 0, alpha, beta, togglePrune);    //calls minimax recursively, but isMaximizing is set to 0 here, since next turn is Human's
                     board[i][k] = ' '; // undo move
                     if (togglePrune == 1)
                     {
@@ -121,7 +121,7 @@ int miniMax(int depth, int isMaximizing, int alpha, int beta, int togglePrune)
     jump1:
         return bestScore;
     }
-    else // if isMaximizing == 0
+    else // if isMaximizing == 0 player(human) is the minimizer
     {
         int bestScore = INT_MAX;
         for (int i = 0; i < 3; i++)
@@ -131,7 +131,7 @@ int miniMax(int depth, int isMaximizing, int alpha, int beta, int togglePrune)
                 if (board[i][k] == ' ')
                 {
                     board[i][k] = human; //'X' turn (HUMAN)
-                    score = miniMax(depth + 1, 1, alpha, beta, togglePrune);
+                    score = miniMax(depth + 1, 1, alpha, beta, togglePrune);    //calls minimax recursively, but isMaximizing is set to 1 here, since next turn is Computer's
                     board[i][k] = ' '; // undo move
                     if (togglePrune == 1)
                     {
@@ -164,7 +164,7 @@ int miniMax(int depth, int isMaximizing, int alpha, int beta, int togglePrune)
     }
 }
 
-char checkWin(char currentBoard[3][3])  //not using pyrena's gameover() function because it would take too much refactoring and would further complicate the algorithm
+char checkWin(char currentBoard[3][3]) // not using pyrena's gameover() function because it would take too much refactoring and would further complicate the algorithm, both functions differ by returning different data types
 {
     // loops through to check all rows
     for (int i = 0; i < 3; i++)

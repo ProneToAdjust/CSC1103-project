@@ -247,8 +247,8 @@ void level4()
 {
     printf("hard\n");
     int *arrBestMove;
-    arrBestMove = bestMoveByAI(board, 2, 1);
-    board[arrBestMove[0]][arrBestMove[1]] = PlayerTWO;
+    arrBestMove = bestMoveByAI(board, 1);       //bestMoveByAI() defined in minimax.c file, linked by header
+    board[arrBestMove[0]][arrBestMove[1]] = PlayerTWO;      //arrBestMove[0] = x axis, arrBestMove[1] = y axis
 }
 
 // Resets the board after game ends
@@ -377,12 +377,14 @@ int main()
         {
             BoardDisplay();
             Player1Turn();
+            //Player2Turn();    //uncomment to have AI go first -JunWei
 
             winner = gameOver();
             if (winner != true && checkEmptyCells() != 0)
             {
                 BoardDisplay();
                 Player2Turn();
+                //Player1Turn();    //uncomment to have AI go first -JunWei
                 winner = gameOver();
                 if (winner == true)
                     winnername = PlayerTWO;
