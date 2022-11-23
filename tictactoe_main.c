@@ -180,7 +180,6 @@ void manualPlayer()
 // x and y is generated through random generator
 void level1()
 {
-    printf("easy\n");
     int row, column;
     bool ValidMove = true;
     do
@@ -245,7 +244,6 @@ void level2(){
 // random generator is used to determine if level 1 or level 4 is executed
 void level3()
 {
-    printf("medium\n");
     int option = zeroOrOne(true);
     if (option == 0)
     {
@@ -260,7 +258,6 @@ void level3()
 // minimax algorithm is used for this level
 void level4()
 {
-    printf("hard\n");
     int *arrBestMove;
     arrBestMove = bestMoveByAI(board, 1);       //bestMoveByAI() defined in minimax.c file, linked by header
     board[arrBestMove[0]][arrBestMove[1]] = PlayerTWO;      //arrBestMove[0] = x axis, arrBestMove[1] = y axis
