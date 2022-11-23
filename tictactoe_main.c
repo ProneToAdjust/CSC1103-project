@@ -10,13 +10,14 @@
 #include "minimax.h"
 #include "naive_bayes_ai.h"
 
-// Array for board
+/*Array for board*/
 char board[3][3];
 
-// Character of players
+/*Character of players*/
 const char PlayerONE = 'X';
 const char PlayerTWO = 'O';
 
+/*Function call*/
 void Instructions();
 void BoardDisplay();
 void Player1Turn();
@@ -81,6 +82,7 @@ void Instructions()
     } while (instructiontrue == true);
 }
 
+/*A function to display board*/
 void BoardDisplay()
 {
     // A function to display board
@@ -276,7 +278,7 @@ void emptyBoard()
     }
 }
 
-// checks the board to see if there are any empty cells left
+/*checks the board to see if there are any empty cells left*/
 int checkEmptyCells()
 {
     int emptycells = 9;
@@ -294,7 +296,7 @@ int checkEmptyCells()
     return emptycells;
 }
 
-// check rows
+/*check rows*/
 bool whoWinsRows()
 {
     for (int i = 0; i < 3; i++)
@@ -310,7 +312,7 @@ bool whoWinsRows()
     return (false);
 }
 
-// check columns
+/*check columns*/
 bool whoWinColumns()
 {
     for (int i = 0; i < 3; i++)
@@ -326,7 +328,7 @@ bool whoWinColumns()
     return (false);
 }
 
-// check diagonals
+/*check diagonals*/
 bool whoWinsDiagonal()
 {
     if (board[0][0] == board[1][1] && board[0][0] == board[2][2])
@@ -346,13 +348,13 @@ bool whoWinsDiagonal()
     return (false);
 }
 
-// check winner
+/*check winner*/
 bool gameOver()
 {
     return (whoWinsRows() || whoWinColumns() || whoWinsDiagonal());
 }
 
-// print outcome of results
+/*print outcome of results*/
 void WINNER(char winnername)
 {
     if (winnername == PlayerONE)
@@ -370,21 +372,21 @@ void WINNER(char winnername)
     }
 }
 
-// main function
+/*main function*/
 int main()
 {
     bool winner = false;
     char winnername = ' ';
     char again = ' ';
-    Instructions();
-    emptyBoard();
+    Instructions(); // displays instructions
+    emptyBoard();   // displayed empty board
 
     do
     {
         winnername = ' '; // resets winner
         again = ' ';
         winner = false;
-        emptyBoard();
+        emptyBoard();   // displayed empty board upon playing again
 
         while (winner == false && checkEmptyCells() != 0) // while there is no winner and have empty cells
         {
@@ -411,7 +413,7 @@ int main()
         }
 
         BoardDisplay();
-        WINNER(winnername);
+        WINNER(winnername); // declares winner
 
         printf("\nDo you want to play again? (Y/N): ");
         scanf("%c", &again);
