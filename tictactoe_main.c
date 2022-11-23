@@ -211,7 +211,20 @@ void level2(){
     {
         for (int col = 0; col < 3; col++)
         {   
-            converted_board[index] = board[row][col] == ' ' ? 'b' : tolower(board[row][col]);
+            switch (board[row][col])
+            {
+            case 'X':
+                converted_board[index] = 'o';
+                break;
+
+            case 'O':
+                converted_board[index] = 'x';
+                break;
+
+            default:
+                converted_board[index] = 'b';
+                break;
+            }
             index++;
         }
     }

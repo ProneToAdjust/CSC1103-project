@@ -1,4 +1,18 @@
+/**
+ * @file nb_training_and_testing.c
+ * @author Ryan Ong QC
+ * @brief Run this file to calculate the probabilities for the naive bayes classifier
+ * and store them in a file, afterwards test the classifier and print the error prob and confusion matrix
+ * 
+ * Build:
+ * gcc -o nb_training_and_testing nb_training_and_testing.c naive_bayes_ai.c
+ * 
+ * Run:
+ * .\nb_training_and_testing
+ */
+
 #include <stdio.h>
+#include "naive_bayes_ai.h"
 
 struct prepped_data
 {
@@ -7,25 +21,9 @@ struct prepped_data
 	int testing_indexes[192];
 };
 
-struct weights
-{
-	float p_x_win_pos[9];
-	float p_b_win_pos[9];
-	float p_o_win_pos[9];
-
-	float p_x_lose_pos[9];
-	float p_b_lose_pos[9];
-	float p_o_lose_pos[9];
-
-	float p_win;
-	float p_lose;
-};
-
 struct prepped_data prepare_data();
 struct weights train_model(struct prepped_data);
 void test_model(struct weights, struct prepped_data);
-float calculate_win_prob(int board[9], struct weights weights);
-float calculate_lose_prob(int board[9], struct weights weights);
 
 int main(void)
 {
@@ -209,7 +207,7 @@ struct weights train_model(struct prepped_data prepped_data)
 		}
 	}
 
-	struct weights weights;
+	struct weights weights; // found in naive_bayes_ai.h
 
 	// Calculate the weights at the differenent positions and store in weights struct
 	for (int i = 0; i < 9; i++)
@@ -272,16 +270,6 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 
 		int w_or_l = win_prob > lose_prob ? 1 : 0;
 
-		if (
-			(w_or_l && prepped_data.game_data[test_index][9] == 'p') ||
-			(!w_or_l && prepped_data.game_data[test_index][9] == 'n'))
-		{
-		}
-		else
-		{
-			prob_of_error += 1 / 766.0;
-		}
-
 		switch (prepped_data.game_data[test_index][9])
 		{
 		case 'p':
@@ -293,10 +281,10 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 			break;
 
 		case 'n':
-			if (w_or_l)
-				false_positive++;
-			else
+			if (!w_or_l)
 				true_negative++;
+			else
+				false_positive++;
 
 			break;
 
@@ -304,85 +292,17 @@ void test_model(struct weights weights, struct prepped_data prepped_data)
 			break;
 		}
 	}
-	printf("Probability of error: %f\nTrue positive: %d\nTrue negative: %d\nFalse positive: %d\nFalse negative: %d\n",
+
+	prob_of_error = (false_positive + false_negative)/192.0;
+
+	printf("Probability of error: %f\nTrue positive: %d\nTrue negative: %d\nFalse positive: %d\nFalse negative: %d\n\n",
 		   prob_of_error, true_positive, true_negative, false_positive, false_negative);
-}
-
-/**
- * @brief 
- * Calculates the input board's probability of winning using the inputted weights
- * @param board 
- * eg. {'x','o','b','b','b','b','b','b','b'}
- * @param weights 
- * struct containing the weights of the naive bayes model
- * @return float 
- * Probability of winning
- */
-float calculate_win_prob(int board[9], struct weights weights)
-{
-	float win_prob = 1;
-
-	for (int i = 0; i < 9; i++)
-	{
-		switch (board[i])
-		{
-		case 'x':
-			win_prob *= weights.p_x_win_pos[i];
-			break;
-
-		case 'b':
-			win_prob *= weights.p_b_win_pos[i];
-			break;
-
-		case 'o':
-			win_prob *= weights.p_o_win_pos[i];
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	win_prob *= weights.p_win;
-
-	return win_prob;
-}
-
-/**
- * @brief 
- * Calculates the input board's probability of losing using the inputted weights
- * @param board 
- * eg. {'x','o','b','b','b','b','b','b','b'}
- * @param weights 
- * struct containing the weights of the naive bayes model
- * @return float 
- * Probability of losing
- */
-float calculate_lose_prob(int board[9], struct weights weights)
-{
-	float lose_prob = 1;
-
-	for (int i = 0; i < 9; i++)
-	{
-		switch (board[i])
-		{
-		case 'x':
-			lose_prob *= weights.p_x_lose_pos[i];
-			break;
-
-		case 'b':
-			lose_prob *= weights.p_b_lose_pos[i];
-			break;
-
-		case 'o':
-			lose_prob *= weights.p_o_lose_pos[i];
-			break;
-
-		default:
-			break;
-		}
-	}
-	lose_prob *= weights.p_lose;
-
-	return lose_prob;
+	
+	printf("                          Actual\n");
+	printf("                    positive  negative\n");
+	printf("                    ------------------\n");
+	printf("          positive |    %d  |   %d   |\n",true_positive, false_positive);
+	printf("Predicted          |---------|--------|\n");
+	printf("          negative |    %d   |   %d   |\n", false_negative, true_negative);
+	printf("                    ------------------\n");
 }
