@@ -1,9 +1,10 @@
 # CSC1103-project
 
 To access functional Tic Tac Toe program in terminal:
-1) gcc -o tictactoe_main tictactoe_main.c minimax.c naive_bayes_ai.c
-2) .\tictactoe_main
-
+```shell
+gcc -o tictactoe_main tictactoe_main.c minimax.c naive_bayes_ai.c
+.\tictactoe_main
+```
 Alternatively, just run tictactoe_main.exe
 
 To run GUI with Tic Tac Toe
