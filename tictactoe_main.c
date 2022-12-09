@@ -85,27 +85,51 @@ void Instructions()
 /*A function to display board*/
 void BoardDisplay()
 {
+    char display_board[3][3];
+    int position_num = 0;
+
+    for (int row = 0; row < 3; row++)
+    {
+        for (int col = 0; col < 3; col++)
+        {
+            position_num++;
+            if (board[row][col] != ' ')
+            {
+                display_board[row][col] = board[row][col];
+            }
+            else
+            {
+                display_board[row][col] = position_num + '0';
+            }
+        }
+        
+    }
+    
     // A function to display board
     printf("\n");
-    printf("   %c | %c | %c", board[0][0], board[0][1], board[0][2]);
+    printf("   %c | %c | %c", display_board[0][0], display_board[0][1], display_board[0][2]);
     printf("\n  ---|---|---\n");
-    printf("   %c | %c | %c", board[1][0], board[1][1], board[1][2]);
+    printf("   %c | %c | %c", display_board[1][0], display_board[1][1], display_board[1][2]);
     printf("\n  ---|---|---\n");
-    printf("   %c | %c | %c", board[2][0], board[2][1], board[2][2]);
+    printf("   %c | %c | %c", display_board[2][0], display_board[2][1], display_board[2][2]);
     printf("\n");
 }
 
 // ask player 1 for input for x,y and input in the grid if the move is not taken
 void Player1Turn()
 {
-    int row, column;
+    int row, column, position;
     bool ValidMove = true;
     do
     {
-        printf("\nPlayer 1 (X) please enter row (1-3), column (1-3): ");
-        scanf("%d,%d", &row, &column);
-        row--;
-        column--;
+        printf("\nPlayer 1 (X) please enter position (1-9): ");
+        scanf("%d", &position);
+
+        position--;
+        
+        row = position/3;
+        column = row > 0 ? position % 3 : position;
+        
         if (board[row][column] != ' ') // if board not empty
         {
             ValidMove = false;
@@ -155,14 +179,18 @@ void Player2Turn()
 // ask player 2 for input for x,y and input in the grid if the move is not taken
 void manualPlayer()
 {
-    int row, column;
+    int row, column, position;
     bool ValidMove = true;
     do
     {
-        printf("\nPlayer 2 (X) please enter row (1-3), column (1-3): ");
-        scanf("%d,%d", &row, &column);
-        row--;
-        column--;
+        printf("\nPlayer 2 (O) please enter position (1-9): ");
+        scanf("%d", &position);
+        
+        position--;
+
+        row = position/3;
+        column = row > 0 ? position % 3 : position;
+        
         if (board[row][column] != ' ') // if board not empty
         {
             ValidMove = false;
