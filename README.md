@@ -5,11 +5,9 @@
 ### 2 player mode
 User takes turns to make their move on the board
 ### 1 player mode
-Play against 4 difficulties:
-1) Level 1: Makes a random move
-2) Level 2: Uses a Naive Bayes classifier to decide its move
-3) Level 3: Makes a move at random or uses the minimax algorithm
-4) Level 4: Uses a minimax algorithm 
+Play against 2 difficulties:
+1) Level 1: Uses a Naive Bayes classifier to decide its next move
+2) Level 2: Uses a minimax algorithm to decide its next move
 
 ## Building
 To access functional Tic Tac Toe program in terminal:

@@ -23,19 +23,14 @@ void BoardDisplay();
 void Player1Turn();
 void Player2Turn();
 bool whoWinsRows();
-bool whoWinsColumns();
+// bool whoWinsColumns();
 bool whoWinsDiagonal();
-int CheckEmptyCells();
+// int CheckEmptyCells();
 void WINNER(char);
 
-// changan code
-int randomNumGen(bool randomSeed);
-int zeroOrOne(bool randomSeed);
 void manualPlayer();
 void level1();
 void level2();
-void level3();
-void level4();
 int playerChoice;
 int difficulty;
 
@@ -53,10 +48,10 @@ void Instructions()
         {
             do
             {
-                printf("\nInput 1 for level 1\nInput 2 for level 2\nInput 3 for level 3\nInput 4 for level 4\nPlease key your input:");
+                printf("\nInput 1 for level 1\nInput 2 for level 2\nPlease key your input:");
                 scanf("%d", &difficulty);
 
-                if (difficulty == 1 || difficulty == 2 || difficulty == 3 || difficulty == 4)
+                if (difficulty == 1 || difficulty == 2)
                 {
                     printf("Choose any empty cells and start playing\n");
                     instructiontrue = false;
@@ -158,16 +153,6 @@ void Player2Turn()
         {
             level2();
         }
-
-        else if (difficulty == 3)
-        {
-            level3();
-        }
-
-        else
-        {
-            level4();
-        }
     }
 
     else
@@ -205,32 +190,8 @@ void manualPlayer()
     } while (ValidMove == false);
 }
 
-// x and y is generated through random generator
-void level1()
-{
-    int row, column;
-    bool ValidMove = true;
-    do
-    {
-        int row = randomNumGen(true);
-        int column = randomNumGen(false);
-        row--;
-        column--;
-        if (board[row][column] != ' ') // if board not empty
-        {
-            ValidMove = false;
-        }
-        else
-        {
-            // assigns O to selected cell
-            board[row][column] = PlayerTWO;
-            break;
-        }
-    } while (ValidMove == false);
-}
-
 // Naive Bayes AI opponent, intermediate
-void level2(){
+void level1(){
     int converted_board[9];
 
 
@@ -269,22 +230,8 @@ void level2(){
     board[row][col] = PlayerTWO;
 }
 
-// random generator is used to determine if level 1 or level 4 is executed
-void level3()
-{
-    int option = zeroOrOne(true);
-    if (option == 0)
-    {
-        level1();
-    }
-    else
-    {
-        level4();
-    }
-}
-
 // minimax algorithm is used for this level
-void level4()
+void level2()
 {
     int *arrBestMove;
     arrBestMove = bestMoveByAI(board, 1);       //bestMoveByAI() defined in minimax.c file, linked by header
@@ -449,34 +396,4 @@ int main()
     printf("\nEnd of game, thank you!\n");
 
     return 0;
-}
-
-// generate a random number (1-3) for level 1
-int randomNumGen(bool randomSeed)
-{
-    int randomNum;
-
-    /* initialize random seed: */
-    if (randomSeed)
-        srand(time(NULL));
-
-    /* generate secret number between 1 and 3: */
-    randomNum = rand() % 3 + 1;
-
-    return randomNum;
-}
-
-// generate a random 0 or 1 for level 3
-int zeroOrOne(bool randomSeed)
-{
-    int randomNo;
-
-    /* initialize random seed: */
-    if (randomSeed)
-        srand(time(NULL));
-
-    /* generate secret number between 1 and 3: */
-    randomNo = rand() % 2;
-
-    return randomNo;
 }
